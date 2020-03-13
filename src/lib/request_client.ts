@@ -23,7 +23,7 @@ export function newRequestClient (baseURL) {
         if (Array.isArray(v)) {
           v.forEach((it) => searchParams.append(k, it))
         } else {
-          searchParams.append(k, v)
+          searchParams.append(k, v.toString())
         }
       }
       return searchParams.toString()

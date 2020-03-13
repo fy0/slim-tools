@@ -1,13 +1,27 @@
 
 export class TokenStore {
   getAccessToken (): string {
-    // return ctx.app.$storage.getUniversal('t')
-    // return localStorage.getItem('t')
-    return ""
+    return localStorage.getItem('t')
   }
 
   saveAccessToken (token: string) {
-    // return ctx.app.$storage.setUniversal('t', token)
-    // return localStorage.setItem('t', token)
+    return localStorage.setItem('t', token)
+  }
+}
+
+export class TokenStoreNuxt extends TokenStore {
+  ctx: any
+
+  constructor (ctx: any) {
+    super()
+    this.ctx = ctx
+  }
+
+  getAccessToken (): string {
+    return this.ctx.app.$storage.getUniversal('t')
+  }
+
+  saveAccessToken (token: string) {
+    return this.ctx.app.$storage.setUniversal('t', token)
   }
 }

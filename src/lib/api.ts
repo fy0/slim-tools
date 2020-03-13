@@ -1,13 +1,13 @@
-import { TokenStore } from "../types/token_store"
 import { AxiosInstance } from "axios"
+import { TokenStore } from ".."
 
 const sentinel = {}
 
 export class SlimBaseAPI {
-  client: AxiosInstance
-  tokenStore: TokenStore
-  urlPrefix: string
-  defaultRole: any
+  public client: AxiosInstance
+  public tokenStore: TokenStore
+  public urlPrefix: string
+  public defaultRole: any
 
   constructor (client: AxiosInstance, tokenStore: TokenStore, urlPrefix: string, defaultRole = null) {
     this.client = client
