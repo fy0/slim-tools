@@ -16,14 +16,26 @@ export class SlimBaseAPI {
     this.defaultRole = defaultRole
   }
 
-  request (url, method, { params = undefined, data = undefined, role = sentinel, bulk = null }) {
+  private getRequestRole (role): any {
+    if (role === sentinel) {
+      if (typeof this.defaultRole === 'function') {
+        return this.defaultRole()
+      }
+      return this.defaultRole
+    }
+    return role
+  }
+
+  request (url, method, { params = undefined, data = undefined, role = sentinel, bulk = undefined, returning = undefined }) {
     let headers = {}
     let token = this.tokenStore.getAccessToken()
 
     if (token) headers['AccessToken'] = token
     if (bulk) headers['bulk'] = bulk
-    let realRole = (role === sentinel) ? this.defaultRole : role
-    if (realRole) headers['Role'] = realRole
+    if (returning) headers['returning'] = true
+
+    let requestRole = this.getRequestRole(role)
+    if (requestRole) headers['Role'] = requestRole
 
     this.client.request({ url: `${this.urlPrefix}${url}`, method, params, data, headers })
   }
@@ -34,13 +46,24 @@ export class SlimBaseAPI {
 }
 
 export class SlimSQLAPI extends SlimBaseAPI {
-  async get (params: any, role = sentinel) {
+  /**
+   * 获取单项
+   * @param params 查询参数，规则可参考 https://fy0.github.io/slim/#/quickstart/query_and_modify
+   * @param param1 附加可选信息
+   */
+  async get (params: any, { role = sentinel }) {
     if (params && params.loadfk) {
       params.loadfk = JSON.stringify(params.loadfk)
     }
     return this.request('/get', 'GET', { params, role })
   }
 
+  /**
+   * 获取列表，返回值中自带分页相关信息
+   * @param params 查询参数，规则可参考 https://fy0.github.io/slim/#/quickstart/query_and_modify
+   * @param page 想要查询的页数
+   * @param param2 附加可选信息，其中size为分页大小，但只有后端提供了 LIST_ACCEPT_SIZE_FROM_CLIENT 选项时才能生效。
+   */
   async list (params, page = 1, { size = null, role = sentinel }) {
     if (params && params.loadfk) {
       params.loadfk = JSON.stringify(params.loadfk)
@@ -50,10 +73,21 @@ export class SlimSQLAPI extends SlimBaseAPI {
     return this.request(url, 'GET', { params, role })
   }
 
-  async set (params, data, { bulk = false, role = sentinel }) {
+  /**
+   * 更新数据
+   * @param params 查询参数，规则可参考 https://fy0.github.io/slim/#/quickstart/query_and_modify
+   * @param data 赋值参数，规则参考同一页面
+   * @param param2 附加可选信息，其中 bulk 是一个批量标记，当存在时，此次调用会影响多个结果
+   */
+  async set (params, data, { bulk = undefined, role = sentinel }) {
     return this.request('/update', 'POST', { params, data, bulk, role })
   }
 
+  /**
+   * 
+   * @param data 赋值参数，规则参考 https://fy0.github.io/slim/#/quickstart/query_and_modify
+   * @param param1 
+   */
   async new (data, { role = sentinel }) {
     return this.request('/new', 'POST', { data, role })
   }
