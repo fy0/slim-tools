@@ -37,7 +37,7 @@ export class SlimBaseAPI {
     let requestRole = this.getRequestRole(role)
     if (requestRole) headers['Role'] = requestRole
 
-    this.client.request({ url: `${this.urlPrefix}${url}`, method, params, data, headers })
+    return this.client.request({ url: `${this.urlPrefix}${url}`, method, params, data, headers })
   }
 
   saveAccessToken (token) {
@@ -51,7 +51,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param params 查询参数，规则可参考 https://fy0.github.io/slim/#/quickstart/query_and_modify
    * @param param1 附加可选信息
    */
-  async get (params: any, { role = sentinel }) {
+  async get (params: any, { role = sentinel } = {}) {
     if (params && params.loadfk) {
       params.loadfk = JSON.stringify(params.loadfk)
     }
@@ -64,7 +64,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param page 想要查询的页数
    * @param param2 附加可选信息，其中size为分页大小，但只有后端提供了 LIST_ACCEPT_SIZE_FROM_CLIENT 选项时才能生效。
    */
-  async list (params, page = 1, { size = null, role = sentinel }) {
+  async list (params, page = 1, { size = null, role = sentinel } = {}) {
     if (params && params.loadfk) {
       params.loadfk = JSON.stringify(params.loadfk)
     }
@@ -79,7 +79,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param data 赋值参数，规则参考同一页面
    * @param param2 附加可选信息，其中 bulk 是一个批量标记，当存在时，此次调用会影响多个结果。returning为true则返回受影响的数据列表
    */
-  async set (params, data, { bulk = undefined, role = sentinel, returning }) {
+  async set (params, data, { bulk = undefined, role = sentinel, returning = undefined } = {}) {
     return this.request('/update', 'POST', { params, data, bulk, role, returning })
   }
 
@@ -88,7 +88,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param data 赋值参数，规则参考 https://fy0.github.io/slim/#/quickstart/query_and_modify
    * @param param1 附加可选信息，returning为true返回新建的数据记录
    */
-  async new (data, { role = sentinel, returning }) {
+  async new (data, { role = sentinel, returning = undefined } = {}) {
     return this.request('/new', 'POST', { data, role, returning })
   }
 
@@ -97,7 +97,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param dataList 复数的数据记录
    * @param param1 附加可选信息，returning为true返回新建的数据记录列表
    */
-  async bulkInsert (dataList, { role = sentinel, returning }) {
+  async bulkInsert (dataList, { role = sentinel, returning = undefined } = {}) {
     return this.request('/bulk_insert', 'POST', { data: dataList, role, returning })
   }
 
@@ -106,7 +106,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param params 查询参数，规则可参考 https://fy0.github.io/slim/#/quickstart/query_and_modify
    * @param param1 附加可选信息，其中 bulk 是一个批量标记，当存在时，此次调用会影响多个结果。
    */
-  async delete (params, { bulk = false, role = sentinel }) {
+  async delete (params, { bulk = false, role = sentinel } = {}) {
     return this.request('/delete', 'POST', { params, bulk, role })
   }
 }
