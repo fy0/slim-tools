@@ -94,11 +94,11 @@ export class SlimSQLAPI extends SlimBaseAPI {
 
   /**
    * 批量新建
-   * @param dataList 复数的数据记录
+   * @param items 复数的数据记录
    * @param param1 附加可选信息，returning为true返回新建的数据记录列表
    */
-  async bulkInsert (dataList, { role = sentinel, returning = undefined } = {}) {
-    return this.request('/bulk_insert', 'POST', { data: dataList, role, returning })
+  async bulkInsert (items, { role = sentinel, returning = undefined } = {}) {
+    return this.request('/bulk_insert', 'POST', { data: {items}, role, returning })
   }
 
   /**
