@@ -30,6 +30,18 @@ export class SlimBaseAPI {
     let headers = {}
     let token = this.tokenStore.getAccessToken()
 
+    if (params) {
+      // 将 in 和 notin 做转换，右值需要stringify
+      for (let k of params.keys()) {
+        if (k.endsWith('.in') || k.endsWith('.notin')) {
+          let v = params[k]
+          if (typeof v !== 'string') {
+            params[k] = JSON.stringify(v)
+          }
+        }
+      }
+    }
+
     if (token) headers['AccessToken'] = token
     if (bulk) headers['bulk'] = bulk
     if (returning) headers['returning'] = true
