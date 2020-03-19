@@ -1,5 +1,6 @@
 import { AxiosInstance } from "axios"
 import { TokenStore } from ".."
+import { SlimResponse, SlimResponseGet, SlimResponseList, SlimResponseSet, SlimResponseNew, SlimResponseBulkInsert, SlimResponseDelete } from "../types/response"
 
 const sentinel = {}
 
@@ -26,7 +27,7 @@ export class SlimBaseAPI {
     return role
   }
 
-  request (url, method, { params = undefined, data = undefined, role = sentinel, bulk = undefined, returning = undefined }) {
+  request (url, method, { params = undefined, data = undefined, role = sentinel, bulk = undefined, returning = undefined }): Promise<SlimResponse> {
     let headers = {}
     let token = this.tokenStore.getAccessToken()
 
@@ -63,7 +64,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param params 查询参数，规则可参考 https://fy0.github.io/slim/#/quickstart/query_and_modify
    * @param param1 附加可选信息
    */
-  async get (params: any, { role = sentinel } = {}) {
+  async get (params: any, { role = sentinel } = {}): Promise<SlimResponseGet> {
     if (params && params.loadfk) {
       params.loadfk = JSON.stringify(params.loadfk)
     }
@@ -76,7 +77,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param page 想要查询的页数
    * @param param2 附加可选信息，其中size为分页大小，但只有后端提供了 LIST_ACCEPT_SIZE_FROM_CLIENT 选项时才能生效。
    */
-  async list (params, page = 1, { size = null, role = sentinel } = {}) {
+  async list (params, page = 1, { size = null, role = sentinel } = {}): Promise<SlimResponseList> {
     if (params && params.loadfk) {
       params.loadfk = JSON.stringify(params.loadfk)
     }
@@ -91,7 +92,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param data 赋值参数，规则参考同一页面
    * @param param2 附加可选信息，其中 bulk 是一个批量标记，当存在时，此次调用会影响多个结果。returning为true则返回受影响的数据列表
    */
-  async set (params, data, { bulk = undefined, role = sentinel, returning = undefined } = {}) {
+  async set (params, data, { bulk = undefined, role = sentinel, returning = undefined } = {}): Promise<SlimResponseSet> {
     return this.request('/update', 'POST', { params, data, bulk, role, returning })
   }
 
@@ -100,7 +101,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param data 赋值参数，规则参考 https://fy0.github.io/slim/#/quickstart/query_and_modify
    * @param param1 附加可选信息，returning为true返回新建的数据记录
    */
-  async new (data, { role = sentinel, returning = undefined } = {}) {
+  async new (data, { role = sentinel, returning = undefined } = {}): Promise<SlimResponseNew> {
     return this.request('/new', 'POST', { data, role, returning })
   }
 
@@ -109,7 +110,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param items 复数的数据记录
    * @param param1 附加可选信息，returning为true返回新建的数据记录列表
    */
-  async bulkInsert (items, { role = sentinel, returning = undefined } = {}) {
+  async bulkInsert (items, { role = sentinel, returning = undefined } = {}): Promise<SlimResponseBulkInsert> {
     return this.request('/bulk_insert', 'POST', { data: {items}, role, returning })
   }
 
@@ -118,7 +119,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param params 查询参数，规则可参考 https://fy0.github.io/slim/#/quickstart/query_and_modify
    * @param param1 附加可选信息，其中 bulk 是一个批量标记，当存在时，此次调用会影响多个结果。
    */
-  async delete (params, { bulk = false, role = sentinel } = {}) {
+  async delete (params, { bulk = false, role = sentinel } = {}): Promise<SlimResponseDelete> {
     return this.request('/delete', 'POST', { params, bulk, role })
   }
 }
