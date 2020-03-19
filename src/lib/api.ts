@@ -27,13 +27,13 @@ export class SlimBaseAPI {
     return role
   }
 
-  request (url, method, { params = undefined, data = undefined, role = sentinel, bulk = undefined, returning = undefined }): Promise<SlimResponse> {
+  request (url, method, { params = undefined, data = undefined, role = sentinel, bulk = undefined, returning = undefined } = {}): Promise<SlimResponse> {
     let headers = {}
     let token = this.tokenStore.getAccessToken()
 
     if (params) {
       // 将 in 和 notin 做转换，右值需要stringify
-      for (let k of params.keys()) {
+      for (let k of Object.keys(params)) {
         if (k.endsWith('.in') || k.endsWith('.notin')) {
           let v = params[k]
           if (typeof v !== 'string') {
@@ -64,7 +64,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param params 查询参数，规则可参考 https://fy0.github.io/slim/#/quickstart/query_and_modify
    * @param param1 附加可选信息
    */
-  async get (params: any, { role = sentinel } = {}): Promise<SlimResponseGet> {
+  async get (params: any = {}, { role = sentinel } = {}): Promise<SlimResponseGet> {
     if (params && params.loadfk) {
       params.loadfk = JSON.stringify(params.loadfk)
     }
@@ -77,7 +77,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param page 想要查询的页数
    * @param param2 附加可选信息，其中size为分页大小，但只有后端提供了 LIST_ACCEPT_SIZE_FROM_CLIENT 选项时才能生效。
    */
-  async list (params, page = 1, { size = null, role = sentinel } = {}): Promise<SlimResponseList> {
+  async list (params: any = {}, page = 1, { size = null, role = sentinel } = {}): Promise<SlimResponseList> {
     if (params && params.loadfk) {
       params.loadfk = JSON.stringify(params.loadfk)
     }
