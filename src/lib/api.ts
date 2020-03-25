@@ -93,7 +93,7 @@ export class SlimSQLAPI extends SlimBaseAPI {
    * @param param2 附加可选信息，其中 bulk 是一个批量标记，当存在时，此次调用会影响多个结果。returning为true则返回受影响的数据列表
    */
   async set (params, data, { bulk = undefined, role = sentinel, returning = undefined } = {}): Promise<SlimResponseSet> {
-    return this.request('/update', 'POST', { params, data, bulk, role, returning })
+    return this.request('/set', 'POST', { params, data, bulk, role, returning })
   }
 
   /**
