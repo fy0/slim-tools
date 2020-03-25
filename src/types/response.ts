@@ -17,6 +17,7 @@ export interface SlimPaginationInfo {
   first_page: number, // 第一页
   last_page: number, // 最后一页
   page_numbers: number, // 页数
+  items: Array<any>, // 当页具体数据
 
   info : {
     page_size: number, // 分页大小
