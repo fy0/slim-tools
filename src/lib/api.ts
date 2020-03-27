@@ -34,7 +34,7 @@ export class SlimBaseAPI {
     if (params) {
       // 将 in 和 notin 做转换，右值需要stringify
       for (let k of Object.keys(params)) {
-        if (k.endsWith('.in') || k.endsWith('.notin')) {
+        if (k.endsWith('.in') || k.endsWith('.notin') || k.endsWith('.contains') || k.endsWith('.contains_any')) {
           let v = params[k]
           if (typeof v !== 'string') {
             params[k] = JSON.stringify(v)
