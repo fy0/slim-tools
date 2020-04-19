@@ -18,48 +18,48 @@ export enum retcode {
   WS_DONE = 1
 }
 
-export enum retinfo_cn {
-  SUCCESS = '成功',
-  FAILED = '失败',
-  TIMEOUT = '超时',
-  UNKNOWN = '未知错误',
-  TOO_FREQUENT = '请求过于频繁',
-  DEPRECATED = '此接口已被弃用',
+export let retinfo_cn = {
+  [retcode.SUCCESS]: '成功',
+  [retcode.FAILED]: '失败',
+  [retcode.TIMEOUT]: '超时',
+  [retcode.UNKNOWN]: '未知错误',
+  [retcode.TOO_FREQUENT]: '请求过于频繁',
+  [retcode.DEPRECATED]: '此接口已被弃用',
 
-  NOT_FOUND = '未找到',
-  ALREADY_EXISTS = '已存在',
+  [retcode.NOT_FOUND]: '未找到',
+  [retcode.ALREADY_EXISTS]: '已存在',
 
-  PERMISSION_DENIED = '无权访问',
-  INVALID_ROLE = '无效的权限角色',
+  [retcode.PERMISSION_DENIED]: '无权访问',
+  [retcode.INVALID_ROLE]: '无效的权限角色',
 
-  CHECK_FAILURE = '校验失败',
-  PARAM_REQUIRED = '缺少参数',
-  POSTDATA_REQUIRED = '缺少提交内容',
+  [retcode.CHECK_FAILURE]: '校验失败',
+  [retcode.PARAM_REQUIRED]: '缺少参数',
+  [retcode.POSTDATA_REQUIRED]: '缺少提交内容',
 
-  INVALID_PARAMS = '非法参数',
-  INVALID_POSTDATA = '非法提交内容',
-  INVALID_HEADERS = '非法请求头',
+  [retcode.INVALID_PARAMS]: '非法参数',
+  [retcode.INVALID_POSTDATA]: '非法提交内容',
+  [retcode.INVALID_HEADERS]: '非法请求头'
 }
 
-export enum retinfo_en {
-  SUCCESS = 'success',
-  FAILED = 'failed',
-  TIMEOUT = 'timeout',
-  UNKNOWN = 'unknown',
-  TOO_FREQUENT = 'request too frequent',
-  DEPRECATED = 'interface deprecated',
+export let retinfo_en = {
+  [retcode.SUCCESS]: 'success',
+  [retcode.FAILED]: 'failed',
+  [retcode.TIMEOUT]: 'timeout',
+  [retcode.UNKNOWN]: 'unknown',
+  [retcode.TOO_FREQUENT]: 'request too frequent',
+  [retcode.DEPRECATED]: 'interface deprecated',
 
-  NOT_FOUND = 'not found',
-  ALREADY_EXISTS = 'already exists',
+  [retcode.NOT_FOUND]: 'not found',
+  [retcode.ALREADY_EXISTS]: 'already exists',
 
-  PERMISSION_DENIED = 'permission denied',
-  INVALID_ROLE = 'acquire role failed',
+  [retcode.PERMISSION_DENIED]: 'permission denied',
+  [retcode.INVALID_ROLE]: 'acquire role failed',
 
-  CHECK_FAILURE = 'check failure',
-  PARAM_REQUIRED = 'parameter(s) required',
-  POSTDATA_REQUIRED = 'post data item(s) required',
+  [retcode.CHECK_FAILURE]: 'check failure',
+  [retcode.PARAM_REQUIRED]: 'parameter(s) required',
+  [retcode.POSTDATA_REQUIRED]: 'post data item(s) required',
 
-  INVALID_PARAMS = 'invalid parameters',
-  INVALID_POSTDATA = 'invalid post',
-  INVALID_HEADERS = 'invalid headers',
+  [retcode.INVALID_PARAMS]: 'invalid parameters',
+  [retcode.INVALID_POSTDATA]: 'invalid post',
+  [retcode.INVALID_HEADERS]: 'invalid headers'
 }

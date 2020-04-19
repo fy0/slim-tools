@@ -30,14 +30,15 @@ export class SlimBaseAPI {
   request (url, method, { params = undefined, data = undefined, role = sentinel, bulk = undefined, returning = undefined } = {}): Promise<SlimResponse> {
     let headers = {}
     let token = this.tokenStore.getAccessToken()
+    let paramsForReq: any = {}
 
     if (params) {
       // 将 in 和 notin 做转换，右值需要stringify
-      for (let k of Object.keys(params)) {
+      for (let [k, v] of Object.entries(params)) {
+        paramsForReq[k] = v
         if (k.endsWith('.in') || k.endsWith('.notin') || k.endsWith('.contains') || k.endsWith('.contains_any')) {
-          let v = params[k]
           if (typeof v !== 'string') {
-            params[k] = JSON.stringify(v)
+            paramsForReq[k] = JSON.stringify(v)
           }
         }
       }
@@ -50,7 +51,7 @@ export class SlimBaseAPI {
     let requestRole = this.getRequestRole(role)
     if (requestRole) headers['Role'] = requestRole
 
-    return this.client.request({ url: `${this.urlPrefix}${url}`, method, params, data, headers })
+    return this.client.request({ url: `${this.urlPrefix}${url}`, method, params: paramsForReq, data, headers })
   }
 
   saveAccessToken (token) {
