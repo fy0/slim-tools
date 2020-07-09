@@ -27,31 +27,37 @@ export class SlimBaseAPI {
     return role
   }
 
-  request (url, method, { params = undefined, data = undefined, role = sentinel, bulk = undefined, returning = undefined } = {}): Promise<SlimResponse> {
-    let headers = {}
+  request (url, method, { params = undefined, data = undefined, role = sentinel, bulk = undefined, returning = undefined, headers = undefined } = {}): Promise<SlimResponse> {
     let token = this.tokenStore.getAccessToken()
-    let paramsForReq: any = {}
+    let reqHeaders = {}
+    let reqParams: any = {}
 
     if (params) {
       // 将 in 和 notin 做转换，右值需要stringify
       for (let [k, v] of Object.entries(params)) {
-        paramsForReq[k] = v
+        reqParams[k] = v
         if (k.endsWith('.in') || k.endsWith('.notin') || k.endsWith('.contains') || k.endsWith('.contains_any')) {
           if (typeof v !== 'string') {
-            paramsForReq[k] = JSON.stringify(v)
+            reqParams[k] = JSON.stringify(v)
           }
         }
       }
     }
 
-    if (token) headers['AccessToken'] = token
-    if (bulk) headers['bulk'] = bulk
-    if (returning) headers['returning'] = true
+    if (headers) {
+      for (let [k, v] of Object.entries(headers)) {
+        reqHeaders[k] = v
+      }
+    }
+
+    if (token) reqHeaders['AccessToken'] = token
+    if (bulk) reqHeaders['bulk'] = bulk
+    if (returning) reqHeaders['returning'] = true
 
     let requestRole = this.getRequestRole(role)
-    if (requestRole) headers['Role'] = requestRole
+    if (requestRole) reqHeaders['Role'] = requestRole
 
-    return this.client.request({ url: `${this.urlPrefix}${url}`, method, params: paramsForReq, data, headers })
+    return this.client.request({ url: `${this.urlPrefix}${url}`, method, params: reqParams, data, headers: reqHeaders })
   }
 
   saveAccessToken (token) {
