@@ -1,4 +1,4 @@
-import { AxiosInstance } from "axios"
+import { AxiosInstance, AxiosRequestConfig } from "axios"
 import { TokenStore } from ".."
 import { SlimResponse, SlimResponseGet, SlimResponseList, SlimResponseSet, SlimResponseNew, SlimResponseBulkInsert, SlimResponseDelete } from "../types/response"
 
@@ -57,7 +57,14 @@ export class SlimBaseAPI {
     let requestRole = this.getRequestRole(role)
     if (requestRole) reqHeaders['Role'] = requestRole
 
-    return this.client.request({ url: `${this.urlPrefix}${url}`, method, params: reqParams, data, headers: reqHeaders })
+    const requestOptions: AxiosRequestConfig = { url: `${this.urlPrefix}${url}`, method, params: reqParams, data, headers: reqHeaders, maxContentLength: Infinity, maxBodyLength: Infinity }
+    this.onRequest(requestOptions).then(() => {
+      return this.client.request(requestOptions)
+    });
+  }
+
+  public async onRequest(requestOptions: AxiosRequestConfig): Promise<AxiosRequestConfig> {
+    return requestOptions;
   }
 
   saveAccessToken (token) {
